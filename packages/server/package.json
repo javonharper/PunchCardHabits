@@ -1,0 +1,29 @@
+{
+  "name": "strongwill-server",
+  "version": "1.0.0",
+  "description": "Strongwill API",
+  "author": "Javon Harper",
+  "license": "MIT",
+  "repository": "github:javonharper/strongwill-server",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "graphql": "^0.13.2",
+    "humps": "^2.0.1",
+    "knex": "^0.15.2",
+    "koa": "^2.5.2",
+    "koa-graphql": "^0.7.5",
+    "koa-mount": "^3.0.0",
+    "koa-router": "^7.4.0",
+    "moment": "^2.22.2",
+    "pg": "^7.4.3",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0"
+  }
+}

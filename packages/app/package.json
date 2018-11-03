@@ -1,0 +1,30 @@
+{
+  "name": "Strongwill",
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "test": "yarn jest",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "expo": "^30.0.1",
+    "moment": "^2.22.2",
+    "react": "16.3.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
+    "react-native-style-tachyons": "^4.0.0",
+    "react-native-vector-icons": "^6.0.1",
+    "react-navigation": "^2.17.0",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-logger": "^3.0.6"
+  },
+  "devDependencies": {
+    "jest-expo": "^30.0.0"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  }
+}
