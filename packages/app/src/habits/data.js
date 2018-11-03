@@ -15,23 +15,48 @@ export const logCompletion = habit => ({
   habit
 });
 
-const habitId = uuid();
+const habitId1 = uuid();
+const habitId2 = uuid();
+const today = moment().format();
 
 const initialState = {
   completions: [
     {
-      date: moment().format('YYYY-MM-DD'),
-      timestamp: moment().format(),
-      habitId
-    }
+      date: moment(today).format('YYYY-MM-DD'),
+      timestamp: moment(today).format(),
+      habitId: habitId1
+    },
+    {
+      date: moment(today).format('YYYY-MM-DD'),
+      timestamp: moment(today).format(),
+      habitId: habitId2
+    },
+    {
+      date: moment(today).subtract(1, 'days').format('YYYY-MM-DD'),
+      timestamp: moment(today).format(),
+      habitId: habitId2
+    },
+    {
+      date: moment(today).subtract(9, 'days').format('YYYY-MM-DD'),
+      timestamp: moment(today).format(),
+      habitId: habitId2
+    },
+
   ],
   habits: [
     {
-      id: habitId,
+      id: habitId1,
       name: 'Meditate',
       goal: '2',
       frequency: FREQUENCY.DAILY,
       color: palette.purple
+    },
+    {
+      id: habitId2,
+      name: 'Go to the gym',
+      goal: '3',
+      frequency: FREQUENCY.WEEKLY,
+      color: palette.red
     }
   ]
 };

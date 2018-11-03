@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { pick, map, filter, get } from 'lodash';
 
 export const FREQUENCY = {
@@ -17,7 +18,7 @@ export const formatProgress = frequency => {
     case FREQUENCY.WEEKLY:
       return 'this week';
     default:
-      return 'this ???';
+      return 'this [UNKNOWN FREQUENCY]';
   }
 };
 
@@ -30,19 +31,37 @@ export const titleCase = str => {
   return str.join(' ');
 };
 
-export const habitsWithCompletions = (habits, completions, date) => {
+export const habitsWithCompletions = (habits, allCompletions, date) => {
   return map(habits, habit => {
-    const matchedCompletions = filter(completions, {
-      habitId: habit.id,
-      date: date
-    });
+    const completions =
+      habit.frequency === FREQUENCY.DAILY
+        ? getCompletionsForHabitDaily(habit, allCompletions, date)
+        : getCompletionsForHabitWeekly(habit, allCompletions, date);
 
-    const count = get(matchedCompletions, 'length', 0);
+    return { ...habit, completions };
+  });
+};
 
-    return {
-      ...habit,
-      count
-    };
+export const getCompletionsForHabitDaily = (habit, allCompletions, date) => {
+  return filter(allCompletions, {
+    habitId: habit.id,
+    date: date
+  });
+};
+
+export const getCompletionsForHabitWeekly = (habit, allCompletions, date) => {
+  const weekStart = moment(date)
+    .startOf('week')
+    .format();
+  const weekEnd = moment(date)
+    .endOf('week')
+    .format();
+
+  return filter(allCompletions, completion => {
+    return (
+      habit.id === completion.habitId &&
+      moment(completion.date).isBetween(weekStart, weekEnd)
+    );
   });
 };
 

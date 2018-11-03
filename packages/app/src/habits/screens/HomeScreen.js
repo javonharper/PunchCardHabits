@@ -19,6 +19,14 @@ const HomeScreen = wrap(({ habits, navigation, logCompletion }) => (
     <View cls="flx-i pa3">
       <Heading />
       <SectionList
+        keyExtractor={(item, index) => item + index}
+        sections={map(groupBy(habits, 'frequency'), (habits, title) => ({
+          title,
+          data: habits
+        }))}
+        renderSectionHeader={({ section: { title } }) => (
+          <SectionHeader>{title}</SectionHeader>
+        )}
         renderItem={({ item, index, section }) => (
           <HabitItem
             key={index}
@@ -27,14 +35,7 @@ const HomeScreen = wrap(({ habits, navigation, logCompletion }) => (
             logCompletion={logCompletion}
           />
         )}
-        renderSectionHeader={({ section: { title } }) => (
-          <SectionHeader>{title}</SectionHeader>
-        )}
-        sections={map(groupBy(habits, 'frequency'), (habits, title) => ({
-          title,
-          data: habits
-        }))}
-        keyExtractor={(item, index) => item + index}
+        renderSectionFooter={() => <SectionSpacing />}
       />
       <View cls="aic">
         <AddHabitButton navigation={navigation} />
@@ -72,6 +73,7 @@ const HabitItem = wrap(
   class extends Component {
     render() {
       const { habit, navigation, logCompletion } = this.props;
+      console.log(habit);
       return (
         <TouchableOpacity
           onLongPress={() => {
@@ -87,9 +89,10 @@ const HabitItem = wrap(
           }}
         >
           <View cls="">
+            <View />
             <Text cls="white f4 mb2 fw6">{habit.name}</Text>
             <Text cls="white-90 f5 fw7">
-              {habit.count} of {habit.goal} times{' '}
+              {habit.completions.length} of {habit.goal} times{' '}
               {formatProgress(habit.frequency)}
             </Text>
           </View>
@@ -107,6 +110,8 @@ const Heading = wrap(() => (
     <Text cls="fw9 black f2">Habits</Text>
   </View>
 ));
+
+const SectionSpacing = wrap(() => <View cls="bg-red mb3" />);
 
 const mapStateToProps = ({ habits, completions }) => ({
   habits: habitsWithCompletions(
