@@ -18,7 +18,7 @@ const CreateScreen = wrap(({ navigation }) => (
         <Text cls="fw9 black f2">Start your habit</Text>
       </View>
       <CreateHabitButton
-        onPress={() => navigation.navigate('Edit', { habit: {} })}
+        onPress={() => navigation.navigate('Edit', { habit: {}, isNew: true })}
         label="Create your own"
         labelColor={palette.black}
         color={palette.smokeDarker}
@@ -26,7 +26,7 @@ const CreateScreen = wrap(({ navigation }) => (
       <SectionList
         renderItem={({ item, index, section }) => (
           <CreateHabitButton
-            onPress={() => navigation.navigate('Edit', { habit: item })}
+            onPress={() => navigation.navigate('Edit', { habit: item, isNew: true })}
             key={index}
             label={item.name}
             color={item.color}

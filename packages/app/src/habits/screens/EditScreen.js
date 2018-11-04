@@ -1,103 +1,110 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, TextInput, Button } from 'react-native';
-import { map, sample, pick } from 'lodash';
+import { map, sample, pick, find, defaults } from 'lodash';
 import { connect } from 'react-redux';
-import uuid from 'uuid/v1';
+import uuid from 'uuid';
 import { wrap } from 'react-native-style-tachyons';
 import { FREQUENCY, habitColors } from '../../utils';
-import { saveHabit } from '../';
+import { saveHabit, updateHabit } from '../data';
 
-const EditScreen = wrap(
-  class extends Component {
-    componentWillMount() {
-      this.initHabit(this.props.navigation.state.params.habit);
+class EditScreen extends Component {
+  componentWillMount() {
+    const { habit, habitId, isNew } = this.props.navigation.state.params;
 
-      this.props.navigation.setParams({
-        handleDonePressed: this.handleDonePressed
-      });
-    }
+    const getHabit = isNew ? this.initHabit(habit) : this.loadHabit(habitId);
+    this.setState(getHabit);
 
-    initHabit = habit => {
-      this.setState({
-        id: habit.id || uuid(),
-        name: habit.name || '',
-        goal: habit.goal || 3,
-        frequency: habit.frequency || FREQUENCY.WEEKLY,
-        color: habit.color || sample(habitColors)
-      });
-    };
-
-    commitEdits = state => {
-      this.setState(state);
-    };
-
-    handleDonePressed = () => {
-      this.props.saveHabit(
-        pick(this.state, 'id', 'name', 'goal', 'frequency', 'color')
-      );
-
-      this.props.navigation.popToTop();
-    };
-
-    render() {
-      const { navigation } = this.props;
-      const { name, color, goal, frequency } = this.state;
-      return (
-        <React.Fragment>
-          <View cls="pa3 bg-white flx-i">
-            <Field>
-              <Label>Habit Name</Label>
-              <TextInput
-                cls="bg-smokeDarker pa2 black f4 br3"
-                value={name}
-                onChangeText={name => this.commitEdits({ name })}
-              />
-            </Field>
-            <Field>
-              <Label>How often?</Label>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('EditGoal', {
-                    goal,
-                    commitEdits: this.commitEdits
-                  })
-                }
-              >
-                <ReadOnly>{`${goal} times`}</ReadOnly>
-              </TouchableOpacity>
-            </Field>
-            <Field>
-              <Label>Frequency</Label>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('EditFrequency', {
-                    frequency,
-                    commitEdits: this.commitEdits
-                  })
-                }
-              >
-                <ReadOnly>{frequency}</ReadOnly>
-              </TouchableOpacity>
-            </Field>
-            <Field>
-              <Label>Color</Label>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('EditColor', {
-                    color,
-                    commitEdits: this.commitEdits
-                  })
-                }
-              >
-                <ColorBar color={color} />
-              </TouchableOpacity>
-            </Field>
-          </View>
-        </React.Fragment>
-      );
-    }
+    this.props.navigation.setParams({
+      handleDonePressed: this.handleDonePressed
+    });
   }
-);
+
+  initHabit = habitValues => {
+    return defaults(habitValues, {
+      id: uuid(),
+      name: '',
+      goal: 3,
+      frequency: FREQUENCY.WEEKLY,
+      color: sample(habitColors)
+    });
+  };
+
+  loadHabit = habitId => {
+    return find(this.props.habits, { id: habitId });
+  };
+
+  commitEdits = state => {
+    this.setState(state);
+  };
+
+  handleDonePressed = () => {
+    const { saveHabit, updateHabit } = this.props;
+    const { isNew } = this.props.navigation.state.params;
+
+    const saveFn = isNew ? saveHabit : updateHabit;
+    saveFn(pick(this.state, 'id', 'name', 'goal', 'frequency', 'color'));
+
+    this.props.navigation.popToTop();
+  };
+
+  render() {
+    const { navigation } = this.props;
+    const { name, color, goal, frequency } = this.state;
+    return (
+      <React.Fragment>
+        <View cls="pa3 bg-white flx-i">
+          <Field>
+            <Label>Habit Name</Label>
+            <TextInput
+              cls="bg-smokeDarker pa2 black f4 br3"
+              value={name}
+              onChangeText={name => this.commitEdits({ name })}
+            />
+          </Field>
+          <Field>
+            <Label>How often?</Label>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('EditGoal', {
+                  goal,
+                  commitEdits: this.commitEdits
+                })
+              }
+            >
+              <ReadOnly>{`${goal} times`}</ReadOnly>
+            </TouchableOpacity>
+          </Field>
+          <Field>
+            <Label>Frequency</Label>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('EditFrequency', {
+                  frequency,
+                  commitEdits: this.commitEdits
+                })
+              }
+            >
+              <ReadOnly>{frequency}</ReadOnly>
+            </TouchableOpacity>
+          </Field>
+          <Field>
+            <Label>Color</Label>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('EditColor', {
+                  color,
+                  commitEdits: this.commitEdits
+                })
+              }
+            >
+              <ColorBar color={color} />
+            </TouchableOpacity>
+          </Field>
+        </View>
+      </React.Fragment>
+    );
+  }
+}
 
 const Field = wrap(({ children }) => <View cls="mb4">{children}</View>);
 
@@ -138,13 +145,20 @@ EditScreen.navigationOptions = ({ navigation }) => ({
   )
 });
 
+const mapStateToProps = ({ habits }) => ({
+  habits
+});
+
 const mapDispatchToProps = dispatch => ({
   saveHabit: habit => {
     dispatch(saveHabit(habit));
+  },
+  updateHabit: habit => {
+    dispatch(updateHabit(habit));
   }
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
-)(EditScreen);
+)(wrap(EditScreen));

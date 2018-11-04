@@ -10,24 +10,40 @@ import {
 import { connect } from 'react-redux';
 import { wrap, options } from 'react-native-style-tachyons';
 import Icon from 'react-native-vector-icons/Feather';
+import { groupBy, map, noop, findIndex } from 'lodash';
+import moment from 'moment';
 import { formatProgress, habitWithCompletions, titleCase } from '../../utils';
 import { logCompletion } from '../../habits';
-import { groupBy, map } from 'lodash';
-import moment from 'moment';
 
 class HomeScreen extends Component {
   handleHabitPressed = habitId => {
+    const { logCompletion, navigation, habits } = this.props;
+    const habitActions = [
+      {
+        label: 'Cancel',
+        onPress: noop
+      },
+      {
+        label: 'Mark a completion',
+        onPress: () => logCompletion(habitId) 
+      },
+      {
+        label: 'Edit',
+        onPress: () => navigation.navigate('Edit', { habitId, isNew: false })
+      },
+      {
+        label: 'Delete',
+        onPress: () => console.log('Delete')
+      }
+    ];
+
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Cancel', 'Mark a completion', 'Edit', 'Delete'],
-        destructiveButtonIndex: 3,
-        cancelButtonIndex: 0
+        options: map(habitActions, 'label'),
+        destructiveButtonIndex: findIndex(habitActions, {label: 'Delete'}),
+        cancelButtonIndex:  findIndex(habitActions, {label: 'Cancel'}),
       },
-      buttonIndex => {
-        if (buttonIndex === 1) {
-          /* destructive action */
-        }
-      }
+      buttonIndex => habitActions[buttonIndex].onPress()
     );
   };
 

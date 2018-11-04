@@ -9,7 +9,6 @@ import { palette } from './src/utils';
 
 import {
   HomeScreen,
-  DetailsScreen,
   CreateScreen,
   EditScreen,
   EditGoalScreen,
@@ -30,7 +29,6 @@ NativeTachyons.build(
 const Navigation = createStackNavigator(
   {
     Home: { screen: HomeScreen },
-    Details: { screen: DetailsScreen },
     Create: { screen: CreateScreen },
     Edit: { screen: EditScreen },
     EditGoal: { screen: EditGoalScreen },
@@ -44,10 +42,11 @@ const Navigation = createStackNavigator(
 
 const logger = createLogger({});
 const store = createStore(reducer, applyMiddleware(logger));
+const navigationPersistenceKey = __DEV__ ? "XXXXXX" : null;
 
 const Root = () => (
   <Provider store={store}>
-    <Navigation persistenceKey={'SW'} />
+    <Navigation persistenceKey={navigationPersistenceKey} />
   </Provider>
 );
 

@@ -1,12 +1,19 @@
 import moment from 'moment';
-import { FREQUENCY, palette } from '../utils';
 import uuid from 'uuid';
+import { map } from 'lodash';
+import { FREQUENCY, palette } from '../utils';
 
 const SAVE_HABIT = 'SAVE_HABIT';
+const UPDATE_HABIT = 'UPDATE_HABIT';
 const LOG_COMPLETION = 'LOG_COMPLETION';
 
 export const saveHabit = habit => ({
   type: SAVE_HABIT,
+  habit
+});
+
+export const updateHabit = habit => ({
+  type: UPDATE_HABIT,
   habit
 });
 
@@ -32,29 +39,32 @@ const initialState = {
       habitId: habitId2
     },
     {
-      date: moment(today).subtract(1, 'days').format('YYYY-MM-DD'),
+      date: moment(today)
+        .subtract(1, 'days')
+        .format('YYYY-MM-DD'),
       timestamp: moment(today).format(),
       habitId: habitId2
     },
     {
-      date: moment(today).subtract(9, 'days').format('YYYY-MM-DD'),
+      date: moment(today)
+        .subtract(9, 'days')
+        .format('YYYY-MM-DD'),
       timestamp: moment(today).format(),
       habitId: habitId2
-    },
-
+    }
   ],
   habits: [
     {
       id: habitId1,
       name: 'Meditate',
-      goal: '2',
+      goal: 2,
       frequency: FREQUENCY.DAILY,
       color: palette.purple
     },
     {
       id: habitId2,
       name: 'Go to the gym',
-      goal: '3',
+      goal: 3,
       frequency: FREQUENCY.WEEKLY,
       color: palette.red
     }
@@ -67,6 +77,15 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         habits: [...state.habits, action.habit]
+      };
+
+    case UPDATE_HABIT:
+      return {
+        ...state,
+        habits: map(
+          state.habits,
+          habit => (habit.id === action.habit.id ? action.habit : habit)
+        )
       };
 
     case LOG_COMPLETION:
@@ -86,4 +105,3 @@ export const reducer = (state = initialState, action) => {
       return state;
   }
 };
-

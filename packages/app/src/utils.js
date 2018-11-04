@@ -57,7 +57,7 @@ export const getCompletionsForHabitWeekly = (habit, completions, date) => {
   return filter(completions, completion => {
     return (
       habit.id === completion.habitId &&
-      moment(completion.date).isBetween(weekStart, weekEnd)
+      moment(completion.date).isBetween(weekStart, weekEnd, null,  '[]')
     );
   });
 };
