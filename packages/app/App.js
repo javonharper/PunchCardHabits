@@ -6,6 +6,11 @@ import { createLogger } from 'redux-logger';
 import { Provider } from 'react-redux';
 import NativeTachyons from 'react-native-style-tachyons';
 import { palette } from './src/utils';
+import { initAnalytics, identify } from './src/analytics';
+
+const config = {
+  segmentWriteKey: 'XXX'
+};
 
 import {
   HomeScreen,
@@ -42,7 +47,7 @@ const Navigation = createStackNavigator(
 
 const logger = createLogger({});
 const store = createStore(reducer, applyMiddleware(logger));
-const navigationPersistenceKey = __DEV__ ? "XXXXXX" : null;
+const navigationPersistenceKey = __DEV__ ? 'XXXXXXX' : null;
 
 const Root = () => (
   <Provider store={store}>
@@ -51,6 +56,11 @@ const Root = () => (
 );
 
 export default class App extends React.Component {
+  componentDidMount() {
+    initAnalytics(config.segmentWriteKey);
+    identify('JAVON');
+  }
+
   render() {
     return <Root />;
   }

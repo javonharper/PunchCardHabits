@@ -13,9 +13,14 @@ import Icon from 'react-native-vector-icons/Feather';
 import { groupBy, map, noop, findIndex } from 'lodash';
 import moment from 'moment';
 import { formatProgress, habitWithCompletions, titleCase } from '../../utils';
+import { screen } from '../../analytics';
 import { logCompletion } from '../../habits';
 
 class HomeScreen extends Component {
+  componentDidMount() {
+    screen('HomeScreen');
+  }
+
   handleHabitPressed = habitId => {
     const { logCompletion, navigation, habits } = this.props;
     const habitActions = [
@@ -25,7 +30,7 @@ class HomeScreen extends Component {
       },
       {
         label: 'Mark a completion',
-        onPress: () => logCompletion(habitId) 
+        onPress: () => logCompletion(habitId)
       },
       {
         label: 'Edit',
@@ -40,8 +45,8 @@ class HomeScreen extends Component {
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options: map(habitActions, 'label'),
-        destructiveButtonIndex: findIndex(habitActions, {label: 'Delete'}),
-        cancelButtonIndex:  findIndex(habitActions, {label: 'Cancel'}),
+        destructiveButtonIndex: findIndex(habitActions, { label: 'Delete' }),
+        cancelButtonIndex: findIndex(habitActions, { label: 'Cancel' })
       },
       buttonIndex => habitActions[buttonIndex].onPress()
     );
