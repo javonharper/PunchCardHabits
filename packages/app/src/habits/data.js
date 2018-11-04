@@ -10,9 +10,9 @@ export const saveHabit = habit => ({
   habit
 });
 
-export const logCompletion = habit => ({
+export const logCompletion = habitId => ({
   type: LOG_COMPLETION,
-  habit
+  habitId
 });
 
 const habitId1 = uuid();
@@ -77,7 +77,7 @@ export const reducer = (state = initialState, action) => {
           {
             date: moment().format('YYYY-MM-DD'),
             timestamp: moment().format(),
-            habitId: action.habit.id
+            habitId: action.habitId
           }
         ]
       };

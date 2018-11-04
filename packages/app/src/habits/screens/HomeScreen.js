@@ -1,48 +1,70 @@
 import React, { Component } from 'react';
 import {
-  Text,
-  View,
+  ActionSheetIOS,
   ScrollView,
   SectionList,
-  TouchableOpacity
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { connect } from 'react-redux';
 import { wrap, options } from 'react-native-style-tachyons';
 import Icon from 'react-native-vector-icons/Feather';
-import { formatProgress, habitsWithCompletions, titleCase } from '../../utils';
+import { formatProgress, habitWithCompletions, titleCase } from '../../utils';
 import { logCompletion } from '../../habits';
 import { groupBy, map } from 'lodash';
 import moment from 'moment';
 
-const HomeScreen = wrap(({ habits, navigation, logCompletion }) => (
-  <View cls="flx-i bg-white">
-    <View cls="flx-i pa3">
-      <Heading />
-      <SectionList
-        keyExtractor={(item, index) => item + index}
-        sections={map(groupBy(habits, 'frequency'), (habits, title) => ({
-          title,
-          data: habits
-        }))}
-        renderSectionHeader={({ section: { title } }) => (
-          <SectionHeader>{title}</SectionHeader>
-        )}
-        renderItem={({ item, index, section }) => (
-          <HabitItem
-            key={index}
-            navigation={navigation}
-            habit={item}
-            logCompletion={logCompletion}
+class HomeScreen extends Component {
+  handleHabitPressed = habitId => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Cancel', 'Mark a completion', 'Edit', 'Delete'],
+        destructiveButtonIndex: 3,
+        cancelButtonIndex: 0
+      },
+      buttonIndex => {
+        if (buttonIndex === 1) {
+          /* destructive action */
+        }
+      }
+    );
+  };
+
+  render() {
+    const { habits, navigation, logCompletion } = this.props;
+    return (
+      <View cls="flx-i bg-white">
+        <View cls="flx-i pa3">
+          <Heading />
+          <SectionList
+            keyExtractor={(item, index) => item + index}
+            sections={map(groupBy(habits, 'frequency'), (habits, title) => ({
+              title,
+              data: habits
+            }))}
+            renderSectionHeader={({ section: { title } }) => (
+              <SectionHeader>{title}</SectionHeader>
+            )}
+            renderItem={({ item, index, section }) => (
+              <HabitItem
+                key={index}
+                navigation={navigation}
+                habit={item}
+                onPress={() => this.handleHabitPressed(item.id)}
+                onLongPress={() => logCompletion(item.id)}
+              />
+            )}
+            renderSectionFooter={() => <SectionSpacing />}
           />
-        )}
-        renderSectionFooter={() => <SectionSpacing />}
-      />
-      <View cls="aic">
-        <AddHabitButton navigation={navigation} />
+          <View cls="aic">
+            <AddHabitButton navigation={navigation} />
+          </View>
+        </View>
       </View>
-    </View>
-  </View>
-));
+    );
+  }
+}
 
 HomeScreen.navigationOptions = { title: 'Home' };
 
@@ -72,14 +94,12 @@ const SectionHeader = wrap(({ children }) => (
 const HabitItem = wrap(
   class extends Component {
     render() {
-      const { habit, navigation, logCompletion } = this.props;
-      console.log(habit);
+      const { habit, navigation, onPress, onLongPress } = this.props;
       return (
         <TouchableOpacity
-          onLongPress={() => {
-            logCompletion(habit);
-          }}
           cls="pa3 mv2 br3 ba b--black-10"
+          onPress={onPress}
+          onLongPress={onLongPress}
           style={{
             backgroundColor: habit.color,
             shadowOpacity: 0.5,
@@ -114,20 +134,18 @@ const Heading = wrap(() => (
 const SectionSpacing = wrap(() => <View cls="bg-red mb3" />);
 
 const mapStateToProps = ({ habits, completions }) => ({
-  habits: habitsWithCompletions(
-    habits,
-    completions,
-    moment().format('YYYY-MM-DD')
+  habits: habits.map(habit =>
+    habitWithCompletions(habit, completions, moment().format('YYYY-MM-DD'))
   )
 });
 
 const mapDispatchToProps = dispatch => ({
-  logCompletion: habit => {
-    dispatch(logCompletion(habit));
+  logCompletion: habitId => {
+    dispatch(logCompletion(habitId));
   }
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(HomeScreen);
+)(wrap(HomeScreen));

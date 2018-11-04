@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   Text,
   View,
@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { formatProgress, palette } from '../../utils';
 
 const CreateScreen = wrap(({ navigation }) => (
-  <React.Fragment>
+  <Fragment>
     <View cls="pa3 bg-white">
       <View cls="mb3">
         <Text cls="fw9 black f2">Start your habit</Text>
@@ -39,7 +39,7 @@ const CreateScreen = wrap(({ navigation }) => (
         keyExtractor={(item, index) => item + index}
       />
     </View>
-  </React.Fragment>
+  </Fragment>
 ));
 
 const SectionHeader = wrap(({ children }) => (

@@ -1,6 +1,10 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "app": "yarn --cwd packages/app start",
+    "test": "lerna run test"
+  },
   "devDependencies": {
     "lerna": "^3.4.3"
   }

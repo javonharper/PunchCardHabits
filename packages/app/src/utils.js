@@ -31,25 +31,22 @@ export const titleCase = str => {
   return str.join(' ');
 };
 
-export const habitsWithCompletions = (habits, allCompletions, date) => {
-  return map(habits, habit => {
-    const completions =
-      habit.frequency === FREQUENCY.DAILY
-        ? getCompletionsForHabitDaily(habit, allCompletions, date)
-        : getCompletionsForHabitWeekly(habit, allCompletions, date);
-
-    return { ...habit, completions };
-  });
+export const habitWithCompletions = (habit, allCompletions, date) => {
+  const completions =
+    habit.frequency === FREQUENCY.DAILY
+      ? getCompletionsForHabitDaily(habit, allCompletions, date)
+      : getCompletionsForHabitWeekly(habit, allCompletions, date);
+  return { ...habit, completions };
 };
 
-export const getCompletionsForHabitDaily = (habit, allCompletions, date) => {
-  return filter(allCompletions, {
+export const getCompletionsForHabitDaily = (habit, completions, date) => {
+  return filter(completions, {
     habitId: habit.id,
     date: date
   });
 };
 
-export const getCompletionsForHabitWeekly = (habit, allCompletions, date) => {
+export const getCompletionsForHabitWeekly = (habit, completions, date) => {
   const weekStart = moment(date)
     .startOf('week')
     .format();
@@ -57,7 +54,7 @@ export const getCompletionsForHabitWeekly = (habit, allCompletions, date) => {
     .endOf('week')
     .format();
 
-  return filter(allCompletions, completion => {
+  return filter(completions, completion => {
     return (
       habit.id === completion.habitId &&
       moment(completion.date).isBetween(weekStart, weekEnd)
