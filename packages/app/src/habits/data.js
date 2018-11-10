@@ -1,10 +1,11 @@
 import moment from 'moment';
 import uuid from 'uuid';
-import { map, find } from 'lodash';
+import { map, find, dropWhile } from 'lodash';
 import { FREQUENCY, palette } from '../utils';
 import { track } from '../analytics';
 
 const SAVE_HABIT = 'SAVE_HABIT';
+const DELETE_HABIT = 'DELETE_HABIT';
 const UPDATE_HABIT = 'UPDATE_HABIT';
 const LOG_COMPLETION = 'LOG_COMPLETION';
 
@@ -20,6 +21,11 @@ export const updateHabit = habit => ({
 
 export const logCompletion = habitId => ({
   type: LOG_COMPLETION,
+  habitId
+});
+
+export const deleteHabit = habitId => ({
+  type: DELETE_HABIT,
   habitId
 });
 
@@ -75,14 +81,14 @@ const initialState = {
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SAVE_HABIT:
-      track(SAVE_HABIT, {habit: action.habit});
+      track(SAVE_HABIT, { habit: action.habit });
       return {
         ...state,
         habits: [...state.habits, action.habit]
       };
 
     case UPDATE_HABIT:
-      track(UPDATE_HABIT, {habit: action.habit});
+      track(UPDATE_HABIT, { habit: action.habit });
       return {
         ...state,
         habits: map(
@@ -111,6 +117,14 @@ export const reducer = (state = initialState, action) => {
             habitId: action.habitId
           }
         ]
+      };
+
+    case DELETE_HABIT:
+      track(DELETE_HABIT, { id: action.habitId });
+      return {
+        ...state,
+        habits: dropWhile(state.habits, { id: action.habitId }),
+        completions: dropWhile(state.completions, { habitId: action.habitId })
       };
 
     default:
