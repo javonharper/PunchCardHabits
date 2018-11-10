@@ -56,7 +56,7 @@ class HomeScreen extends Component {
     const { habits, navigation, logCompletion } = this.props;
     return (
       <View cls="flx-i bg-white">
-        <View cls="flx-i pa3">
+        <ScrollView cls="flx-i pa3">
           <Heading />
           <SectionList
             keyExtractor={(item, index) => item + index}
@@ -78,10 +78,10 @@ class HomeScreen extends Component {
             )}
             renderSectionFooter={() => <SectionSpacing />}
           />
-          <View cls="aic">
+          <View cls="aic mb4">
             <AddHabitButton navigation={navigation} />
           </View>
-        </View>
+        </ScrollView>
       </View>
     );
   }
