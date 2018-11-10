@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import { applyMiddleware, createStore } from 'redux';
+import promiseMiddleware from 'redux-promise-middleware'
 import { createLogger } from 'redux-logger';
 import { Provider } from 'react-redux';
 import NativeTachyons from 'react-native-style-tachyons';
@@ -46,7 +47,8 @@ const Navigation = createStackNavigator(
 );
 
 const logger = createLogger({});
-const store = createStore(reducer, applyMiddleware(logger));
+
+const store = createStore(reducer, applyMiddleware(logger, promiseMiddleware()));
 const navigationPersistenceKey = __DEV__ ? 'XXXXXXX' : null;
 
 const Root = () => (
