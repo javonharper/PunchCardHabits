@@ -3,3 +3,4 @@ node_modules
 
 # SECRETS
 .env
+.env.production

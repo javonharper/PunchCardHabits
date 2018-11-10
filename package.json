@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "app": "yarn --cwd packages/app start",
+    "deploy": "yarn --cwd packages/server deploy",
     "test": "lerna run test"
   },
   "devDependencies": {
