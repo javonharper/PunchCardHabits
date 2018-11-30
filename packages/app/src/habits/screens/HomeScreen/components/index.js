@@ -17,7 +17,6 @@ import {
   habitWithCompletions,
   titleCase
 } from '../../../../utils';
-import { screen } from '../../../../analytics';
 import { logCompletion, deleteHabit } from '../../../../habits';
 
 export const Heading = wrap(() => (
@@ -67,7 +66,6 @@ export const HabitItem = wrap(
     }
   }
 );
-
 
 export const AddHabitButton = wrap(({ navigation }) => (
   <TouchableOpacity

@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import {
-  ActionSheetIOS,
-  ScrollView,
-  SectionList,
-  View
-} from 'react-native';
+import { ActionSheetIOS, ScrollView, SectionList, View } from 'react-native';
 import { connect } from 'react-redux';
 import { wrap, options } from 'react-native-style-tachyons';
 import { groupBy, map, noop, findIndex } from 'lodash';
@@ -14,7 +9,6 @@ import {
   habitWithCompletions,
   titleCase
 } from '../../../utils';
-import { screen } from '../../../analytics';
 import { logCompletion, deleteHabit } from '../../../habits';
 import {
   AddHabitButton,
@@ -25,10 +19,6 @@ import {
 } from './components';
 
 class HomeScreen extends Component {
-  componentDidMount() {
-    screen('HomeScreen');
-  }
-
   handleHabitPressed = habitId => {
     const { navigation, habits, logCompletion, deleteHabit } = this.props;
     const habitActions = [

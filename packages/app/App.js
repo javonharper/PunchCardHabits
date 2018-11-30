@@ -7,7 +7,6 @@ import { createLogger } from 'redux-logger';
 import { Provider } from 'react-redux';
 import NativeTachyons from 'react-native-style-tachyons';
 import { palette } from './src/utils';
-import { initAnalytics, identify } from './src/analytics';
 
 const config = {
   segmentWriteKey: 'XXX'
@@ -58,11 +57,6 @@ const Root = () => (
 );
 
 export default class App extends React.Component {
-  componentDidMount() {
-    initAnalytics(config.segmentWriteKey);
-    identify('JAVON');
-  }
-
   render() {
     return <Root />;
   }

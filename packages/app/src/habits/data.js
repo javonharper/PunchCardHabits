@@ -2,7 +2,6 @@ import moment from 'moment';
 import uuid from 'uuid';
 import { map, find, dropWhile } from 'lodash';
 import { FREQUENCY, palette } from '../utils';
-import { track } from '../analytics';
 
 const SAVE_HABIT = 'SAVE_HABIT';
 const DELETE_HABIT = 'DELETE_HABIT';
@@ -81,14 +80,12 @@ const initialState = {
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SAVE_HABIT:
-      track(SAVE_HABIT, { habit: action.habit });
       return {
         ...state,
         habits: [...state.habits, action.habit]
       };
 
     case UPDATE_HABIT:
-      track(UPDATE_HABIT, { habit: action.habit });
       return {
         ...state,
         habits: map(
@@ -99,13 +96,6 @@ export const reducer = (state = initialState, action) => {
 
     case LOG_COMPLETION:
       const now = moment();
-
-      track(LOG_COMPLETION, {
-        habitId: action.habitId,
-        timestamp: now.format(),
-        habitId: action.habitId,
-        habit: find(state.habits, { id: action.habitId })
-      });
 
       return {
         ...state,
@@ -120,7 +110,6 @@ export const reducer = (state = initialState, action) => {
       };
 
     case DELETE_HABIT:
-      track(DELETE_HABIT, { id: action.habitId });
       return {
         ...state,
         habits: dropWhile(state.habits, { id: action.habitId }),
