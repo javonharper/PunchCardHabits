@@ -87,7 +87,6 @@ describe('habits reducer', () => {
     };
 
     const actualState = reducer(state, deleteHabit(habit2.id));
-    console.log('actualState', actualState);
     expect(actualState.habits.length).toEqual(1);
     expect(actualState.habits[0].id).toEqual('habit-1');
   });
