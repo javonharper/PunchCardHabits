@@ -1,6 +1,6 @@
 import moment from 'moment';
 import uuid from 'uuid';
-import { map, find, dropWhile } from 'lodash';
+import { map, find, reject } from 'lodash';
 import { FREQUENCY, palette } from '../utils';
 
 const SAVE_HABIT = 'SAVE_HABIT';
@@ -65,8 +65,8 @@ export const reducer = (state = initialState, action) => {
     case DELETE_HABIT:
       return {
         ...state,
-        habits: dropWhile(state.habits, { id: action.habitId }),
-        completions: dropWhile(state.completions, { habitId: action.habitId })
+        habits: reject(state.habits, { id: action.habitId }),
+        completions: reject(state.completions, { habitId: action.habitId })
       };
 
     default:
