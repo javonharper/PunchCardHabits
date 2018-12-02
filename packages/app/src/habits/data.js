@@ -28,7 +28,10 @@ export const deleteHabit = habitId => ({
   habitId
 });
 
-const initialState = {};
+const initialState = {
+  habits: [],
+  completions: []
+};
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {

@@ -87,7 +87,7 @@ class HomeScreen extends Component {
 
 HomeScreen.navigationOptions = { title: 'Home' };
 
-const mapStateToProps = ({ habits, completions }) => ({
+const mapStateToProps = ({ habits = [], completions = [] }) => ({
   habits: habits.map(habit =>
     habitWithCompletions(habit, completions, moment().format('YYYY-MM-DD'))
   )
