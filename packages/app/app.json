@@ -24,6 +24,18 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"]
+    "assetBundlePatterns": ["**/*"],
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "strongwill",
+            "project": "strongwill-app",
+            "authToken": "cb6211acf3b841c0ad6c2963fd66e4eb4b3999c21def49279387338a4c632bf2"
+          }
+        }
+      ]
+    }
   }
 }

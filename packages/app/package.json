@@ -21,7 +21,7 @@
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.10.0",
-    "redux-promise-middleware": "^5.1.1"
+    "sentry-expo": "^1.11.0"
   },
   "devDependencies": {
     "jest-expo": "^30.0.0"
