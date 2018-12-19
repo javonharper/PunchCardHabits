@@ -24,7 +24,6 @@ import {
   reducer
 } from './src/habits';
 
-Sentry.enableInExpoDevelopment = true
 Sentry.config('https://19888c396062460a8932090acb747cba@sentry.io/1335440').install();
 
 NativeTachyons.build(
