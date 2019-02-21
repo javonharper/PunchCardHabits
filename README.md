@@ -1,4 +1,3 @@
 # Strongwill
 
-View our trello board for upcoming features:
-https://trello.com/b/9Um7na9s/strongwill
+Strongwill is a tool for your phone to help you maintain and keep track of your habits. 
