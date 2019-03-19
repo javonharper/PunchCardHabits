@@ -10,7 +10,7 @@ import {
 import { connect } from 'react-redux';
 import { wrap, options } from 'react-native-style-tachyons';
 import Icon from 'react-native-vector-icons/Feather';
-import { groupBy, map, noop, findIndex } from 'lodash';
+import { get, groupBy, map, noop, findIndex, times } from 'lodash';
 import moment from 'moment';
 import {
   formatProgress,
@@ -36,10 +36,24 @@ export const SectionHeader = wrap(({ children }) => (
 
 export const SectionSpacing = wrap(() => <View cls="bg-red mb3" />);
 
+const PunchedHole = wrap(() => (
+  <View cls="mr3">
+    <View cls="bg-white ba b--white h2 w2 br5"> </View>
+  </View>
+));
+
+const UnpunchedHole = wrap(() => (
+  <View cls="mr3">
+    <View cls="bg-white-50 ba b--white-80 h2 w2 br5"> </View>
+  </View>
+));
+
 export const HabitItem = wrap(
   class extends Component {
     render() {
       const { habit, navigation, onPress, onLongPress } = this.props;
+      const completions = get(habit, 'completions', []);
+
       return (
         <TouchableOpacity
           cls="pa3 mv2 br3 ba b--black-10"
@@ -53,8 +67,17 @@ export const HabitItem = wrap(
             shadowOffset: { height: 5, width: 0 }
           }}
         >
-          <View cls="">
-            <View />
+          <View>
+            <View cls="flx-row mb3">
+              {times(habit.goal).map(
+                i =>
+                  i < completions.length ? (
+                    <PunchedHole key={i} />
+                  ) : (
+                    <UnpunchedHole key={i} />
+                  )
+              )}
+            </View>
             <Text cls="white f4 mb2 fw6">{habit.name}</Text>
             <Text cls="white-90 f5 fw7">
               {habit.completions.length} of {habit.goal} times{' '}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import { applyMiddleware, createStore } from 'redux';
+import Sentry from 'sentry-expo';
 
 // Combine these
 import { persistStore, persistReducer } from 'redux-persist';
@@ -13,10 +14,6 @@ import { Provider } from 'react-redux';
 import NativeTachyons from 'react-native-style-tachyons';
 import { palette } from './src/utils';
 
-const config = {
-  segmentWriteKey: 'XXX'
-};
-
 import {
   HomeScreen,
   CreateScreen,
@@ -26,6 +23,8 @@ import {
   EditColorScreen,
   reducer
 } from './src/habits';
+
+Sentry.config('https://19888c396062460a8932090acb747cba@sentry.io/1335440').install();
 
 NativeTachyons.build(
   {
@@ -59,7 +58,6 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 
 const logger = createLogger({});
 const store = createStore(persistedReducer, applyMiddleware(logger));
-// const navigationPersistenceKey = __DEV__ ? 'XXXXXXX' : null;
 
 const persistor = persistStore(store);
 
